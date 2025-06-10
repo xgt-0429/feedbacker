@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.feedbacker.mapper.PostTagsMapper">
+  <resultMap id="BaseResultMap" type="com.example.feedbacker.entity.PostTags">
+    <!--@mbg.generated-->
+    <!--@Table post_tags-->
+    <id column="post_id" jdbcType="BIGINT" property="postId" />
+    <id column="tag_id" jdbcType="BIGINT" property="tagId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    post_id, tag_id
+  </sql>
+  <delete id="deleteByPrimaryKey" parameterType="map">
+    <!--@mbg.generated-->
+    delete from post_tags
+    where post_id = #{postId,jdbcType=BIGINT}
+      and tag_id = #{tagId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.example.feedbacker.entity.PostTags">
+    <!--@mbg.generated-->
+    insert into post_tags (post_id, tag_id)
+    values (#{postId,jdbcType=BIGINT}, #{tagId,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.example.feedbacker.entity.PostTags">
+    <!--@mbg.generated-->
+    insert into post_tags
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="postId != null">
+        post_id,
+      </if>
+      <if test="tagId != null">
+        tag_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="postId != null">
+        #{postId,jdbcType=BIGINT},
+      </if>
+      <if test="tagId != null">
+        #{tagId,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+</mapper>

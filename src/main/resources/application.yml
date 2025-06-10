@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: Feedbacker
+
+  datasource:
+    url: jdbc:mysql://13.210.204.61:3306/feedbacker?useSSL=false&serverTimezone=UTC&characterEncoding=utf8
+    username: root
+    password: ${DB_PWD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.example.feedbacker.entity

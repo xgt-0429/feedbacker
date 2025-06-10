@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.feedbacker.mapper.CircleMembersMapper">
+  <resultMap id="BaseResultMap" type="com.example.feedbacker.entity.CircleMembers">
+    <!--@mbg.generated-->
+    <!--@Table circle_members-->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="circle_id" jdbcType="BIGINT" property="circleId" />
+    <result column="user_id" jdbcType="BIGINT" property="userId" />
+    <result column="role" jdbcType="OTHER" property="role" />
+    <result column="joined_at" jdbcType="TIMESTAMP" property="joinedAt" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, circle_id, user_id, `role`, joined_at
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <!--@mbg.generated-->
+    select 
+    <include refid="Base_Column_List" />
+    from circle_members
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    <!--@mbg.generated-->
+    delete from circle_members
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.example.feedbacker.entity.CircleMembers" useGeneratedKeys="true">
+    <!--@mbg.generated-->
+    insert into circle_members (circle_id, user_id, `role`, 
+      joined_at)
+    values (#{circleId,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{role,jdbcType=OTHER}, 
+      #{joinedAt,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.example.feedbacker.entity.CircleMembers" useGeneratedKeys="true">
+    <!--@mbg.generated-->
+    insert into circle_members
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="circleId != null">
+        circle_id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="role != null">
+        `role`,
+      </if>
+      <if test="joinedAt != null">
+        joined_at,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="circleId != null">
+        #{circleId,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="role != null">
+        #{role,jdbcType=OTHER},
+      </if>
+      <if test="joinedAt != null">
+        #{joinedAt,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.example.feedbacker.entity.CircleMembers">
+    <!--@mbg.generated-->
+    update circle_members
+    <set>
+      <if test="circleId != null">
+        circle_id = #{circleId,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="role != null">
+        `role` = #{role,jdbcType=OTHER},
+      </if>
+      <if test="joinedAt != null">
+        joined_at = #{joinedAt,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.example.feedbacker.entity.CircleMembers">
+    <!--@mbg.generated-->
+    update circle_members
+    set circle_id = #{circleId,jdbcType=BIGINT},
+      user_id = #{userId,jdbcType=BIGINT},
+      `role` = #{role,jdbcType=OTHER},
+      joined_at = #{joinedAt,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>
