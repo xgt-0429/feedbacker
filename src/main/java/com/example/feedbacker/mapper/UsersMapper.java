@@ -34,6 +34,13 @@ public interface UsersMapper {
     Users selectByPrimaryKey(Long id);
 
     /**
+     * select by userName
+     * @param userName the userName
+     * @return object by userName
+     */
+    Users selectByUserName(String userName);
+
+    /**
      * update record selective
      * @param record the updated record
      * @return update count
