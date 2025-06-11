@@ -14,10 +14,12 @@
     <result column="created_at" jdbcType="TIMESTAMP" property="createdAt" />
     <result column="updated_at" jdbcType="TIMESTAMP" property="updatedAt" />
   </resultMap>
+
   <sql id="Base_Column_List">
     <!--@mbg.generated-->
     id, author_id, circle_id, merchant_id, title, content, score, created_at, updated_at
   </sql>
+
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     <!--@mbg.generated-->
     select 

@@ -1,7 +1,5 @@
 package com.example.feedbacker.mapper;
 
-import com.example.feedbacker.dto.MerchantDto;
-import com.example.feedbacker.entity.Merchant;
 import com.example.feedbacker.entity.MerchantFavorite;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
