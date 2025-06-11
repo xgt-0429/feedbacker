@@ -34,9 +34,10 @@ public class SecurityConfig {
                 // 配置 URL 访问权限
                 .authorizeHttpRequests(auth -> auth
                                 // 放行注册、登录、登出接口
-                                .requestMatchers("/api/auth/**").permitAll()
+                                //.requestMatchers("/api/auth/**").permitAll()
+                                .requestMatchers("/api/**").permitAll()
                                 // 其余所有 /api/** 都得认证
-                                .requestMatchers("/api/**").authenticated()
+                                //.requestMatchers("/api/**").authenticated()
                         // （如有其它无需鉴权的接口再继续 permitAll()）
                 )
                 // 把我们的 JWT 过滤器加在 UsernamePasswordAuthenticationFilter 前面

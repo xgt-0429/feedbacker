@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.feedbacker.mapper.MerchantFavoriteMapper">
+  <resultMap id="BaseResultMap" type="com.example.feedbacker.entity.MerchantFavorite">
+    <!--@mbg.generated-->
+    <!--@Table merchant_favorites-->
+    <id column="user_id" jdbcType="BIGINT" property="userId" />
+    <id column="merchant_id" jdbcType="BIGINT" property="merchantId" />
+    <result column="created_at" jdbcType="TIMESTAMP" property="createdAt" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    user_id, merchant_id, created_at
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="map" resultMap="BaseResultMap">
+    <!--@mbg.generated-->
+    select 
+    <include refid="Base_Column_List" />
+    from merchant_favorites
+    where user_id = #{userId,jdbcType=BIGINT}
+      and merchant_id = #{merchantId,jdbcType=BIGINT}
+  </select>
+  <select id="exists" parameterType="map" resultType="int">
+    select count(1)
+    from merchant_favorites
+    where user_id = #{userId,jdbcType=BIGINT}
+    and merchant_id = #{merchantId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="map">
+    <!--@mbg.generated-->
+    delete from merchant_favorites
+    where user_id = #{userId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByUserIdAndMerchantId" parameterType="map">
+    <!--@mbg.generated-->
+    delete from merchant_favorites
+    where user_id = #{userId,jdbcType=BIGINT}
+    and merchant_id = #{merchantId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.example.feedbacker.entity.MerchantFavorite">
+    <!--@mbg.generated-->
+    insert into merchant_favorites (user_id, merchant_id, created_at
+      )
+    values (#{userId,jdbcType=BIGINT}, #{merchantId,jdbcType=BIGINT}, #{createdAt,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.example.feedbacker.entity.MerchantFavorite">
+    <!--@mbg.generated-->
+    insert into merchant_favorites
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="merchantId != null">
+        merchant_id,
+      </if>
+      <if test="createdAt != null">
+        created_at,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="userId != null">
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="merchantId != null">
+        #{merchantId,jdbcType=BIGINT},
+      </if>
+      <if test="createdAt != null">
+        #{createdAt,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.example.feedbacker.entity.MerchantFavorite">
+    <!--@mbg.generated-->
+    update merchant_favorites
+    <set>
+      <if test="createdAt != null">
+        created_at = #{createdAt,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where user_id = #{userId,jdbcType=BIGINT}
+      and merchant_id = #{merchantId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.example.feedbacker.entity.MerchantFavorite">
+    <!--@mbg.generated-->
+    update merchant_favorites
+    set created_at = #{createdAt,jdbcType=TIMESTAMP}
+    where user_id = #{userId,jdbcType=BIGINT}
+      and merchant_id = #{merchantId,jdbcType=BIGINT}
+  </update>
+
+  <select id="selectFavoriteMerchantIds" resultType="java.lang.Long">
+    SELECT merchant_id FROM merchant_favorites WHERE user_id = #{userId}
+  </select>
+</mapper>

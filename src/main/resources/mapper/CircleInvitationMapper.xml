@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.feedbacker.mapper.CircleInvitationMapper">
+  <resultMap id="BaseResultMap" type="com.example.feedbacker.entity.CircleInvitation">
+    <!--@mbg.generated-->
+    <!--@Table circle_invitations-->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="circle_id" jdbcType="BIGINT" property="circleId" />
+    <result column="inviter_id" jdbcType="BIGINT" property="inviterId" />
+    <result column="invitee_id" jdbcType="BIGINT" property="inviteeId" />
+    <result column="status" jdbcType="OTHER" property="status" />
+    <result column="created_at" jdbcType="TIMESTAMP" property="createdAt" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, circle_id, inviter_id, invitee_id, `status`, created_at
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <!--@mbg.generated-->
+    select 
+    <include refid="Base_Column_List" />
+    from circle_invitations
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    <!--@mbg.generated-->
+    delete from circle_invitations
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.example.feedbacker.entity.CircleInvitation" useGeneratedKeys="true">
+    <!--@mbg.generated-->
+    insert into circle_invitations (circle_id, inviter_id, invitee_id, 
+      `status`, created_at)
+    values (#{circleId,jdbcType=BIGINT}, #{inviterId,jdbcType=BIGINT}, #{inviteeId,jdbcType=BIGINT}, 
+      #{status,jdbcType=OTHER}, #{createdAt,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.example.feedbacker.entity.CircleInvitation" useGeneratedKeys="true">
+    <!--@mbg.generated-->
+    insert into circle_invitations
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="circleId != null">
+        circle_id,
+      </if>
+      <if test="inviterId != null">
+        inviter_id,
+      </if>
+      <if test="inviteeId != null">
+        invitee_id,
+      </if>
+      <if test="status != null">
+        `status`,
+      </if>
+      <if test="createdAt != null">
+        created_at,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="circleId != null">
+        #{circleId,jdbcType=BIGINT},
+      </if>
+      <if test="inviterId != null">
+        #{inviterId,jdbcType=BIGINT},
+      </if>
+      <if test="inviteeId != null">
+        #{inviteeId,jdbcType=BIGINT},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=OTHER},
+      </if>
+      <if test="createdAt != null">
+        #{createdAt,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.example.feedbacker.entity.CircleInvitation">
+    <!--@mbg.generated-->
+    update circle_invitations
+    <set>
+      <if test="circleId != null">
+        circle_id = #{circleId,jdbcType=BIGINT},
+      </if>
+      <if test="inviterId != null">
+        inviter_id = #{inviterId,jdbcType=BIGINT},
+      </if>
+      <if test="inviteeId != null">
+        invitee_id = #{inviteeId,jdbcType=BIGINT},
+      </if>
+      <if test="status != null">
+        `status` = #{status,jdbcType=OTHER},
+      </if>
+      <if test="createdAt != null">
+        created_at = #{createdAt,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.example.feedbacker.entity.CircleInvitation">
+    <!--@mbg.generated-->
+    update circle_invitations
+    set circle_id = #{circleId,jdbcType=BIGINT},
+      inviter_id = #{inviterId,jdbcType=BIGINT},
+      invitee_id = #{inviteeId,jdbcType=BIGINT},
+      `status` = #{status,jdbcType=OTHER},
+      created_at = #{createdAt,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>
