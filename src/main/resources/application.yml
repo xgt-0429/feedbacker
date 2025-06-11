@@ -16,3 +16,6 @@ mybatis:
   mapper-locations: classpath:mapper/*.xml
   type-aliases-package: com.example.feedbacker.entity
 
+jwt:
+  secret: rKkSUrPTdlc4/d7CLwb1Xg2GipF5BqnF7VGCBDiNDjI=
+  expiration-ms: 86400000
