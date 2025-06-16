@@ -46,4 +46,6 @@ public interface TagMapper {
      * @return update count
      */
     int updateByPrimaryKey(Tag record);
+
+    Tag findByName(String tagName);
 }

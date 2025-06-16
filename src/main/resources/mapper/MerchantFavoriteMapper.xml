@@ -89,7 +89,18 @@
       and merchant_id = #{merchantId,jdbcType=BIGINT}
   </update>
 
-  <select id="selectFavoriteMerchantIds" resultType="java.lang.Long">
-    SELECT merchant_id FROM merchant_favorites WHERE user_id = #{userId}
+  <select id="selectFavoriteMerchantIds" parameterType="map" resultType="long">
+    SELECT merchant_id
+    FROM merchant_favorites
+    WHERE user_id = #{userId}
+    ORDER BY created_at DESC
+    LIMIT #{limit} OFFSET #{offset}
   </select>
+
+  <select id="countFavoritesByUserId" parameterType="long" resultType="long">
+    SELECT COUNT(1)
+    FROM merchant_favorites
+    WHERE user_id = #{userId}
+  </select>
+
 </mapper>

@@ -4,11 +4,7 @@ import java.util.Date;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.Getter;
-import lombok.Setter;
 
-@Setter
-@Getter
 public class Merchant {
     @NotNull(message = "不能为null")
     private Long id;
@@ -21,6 +17,36 @@ public class Merchant {
 
     @Size(max = 255,message = "最大长度要小于 255")
     private String contactInfo;
+
+    /**
+     * 外部数据来源（如 Google）
+     */
+    private String externalSource;
+
+    /**
+     * 外部接口中该商家的唯一 ID（place_id）
+     */
+    private String externalId;
+
+    /**
+     * 门店地址
+     */
+    private String address;
+
+    /**
+     * 纬度
+     */
+    private Double latitude;
+
+    /**
+     * 经度
+     */
+    private Double longitude;
+
+    /**
+     * 首次创建该商家的用户 ID
+     */
+    private Long createdBy;
 
     private Date createdAt;
 
@@ -58,6 +84,54 @@ public class Merchant {
         this.contactInfo = contactInfo;
     }
 
+    public String getExternalSource() {
+        return externalSource;
+    }
+
+    public void setExternalSource(String externalSource) {
+        this.externalSource = externalSource;
+    }
+
+    public String getExternalId() {
+        return externalId;
+    }
+
+    public void setExternalId(String externalId) {
+        this.externalId = externalId;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
+    }
+
+    public Long getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(Long createdBy) {
+        this.createdBy = createdBy;
+    }
+
     public Date getCreatedAt() {
         return createdAt;
     }
@@ -74,19 +148,4 @@ public class Merchant {
         this.updatedAt = updatedAt;
     }
 
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getClass().getSimpleName());
-        sb.append(" [");
-        sb.append("Hash = ").append(hashCode());
-        sb.append(", id=").append(id);
-        sb.append(", name=").append(name);
-        sb.append(", description=").append(description);
-        sb.append(", contactInfo=").append(contactInfo);
-        sb.append(", createdAt=").append(createdAt);
-        sb.append(", updatedAt=").append(updatedAt);
-        sb.append("]");
-        return sb.toString();
-    }
 }

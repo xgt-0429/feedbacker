@@ -9,6 +9,11 @@ public class PostTag {
     @NotNull(message = "不能为null")
     private Long tagId;
 
+    public PostTag(Long postId, Long tagId) {
+        this.postId = postId;
+        this.tagId = tagId;
+    }
+
     public Long getPostId() {
         return postId;
     }

@@ -4,53 +4,27 @@ import com.example.feedbacker.entity.Merchant;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import java.util.Collection;
 import java.util.List;
 
 @Mapper
 public interface MerchantMapper {
-    /**
-     * delete by primary key
-     * @param id primaryKey
-     * @return deleteCount
-     */
-    int deleteByPrimaryKey(Long id);
 
-    /**
-     * insert record to table
-     * @param record the record
-     * @return insert count
-     */
-    int insert(Merchant record);
+    /** 根据外部来源和 ID 查商家 */
+    Merchant findBySourceExternal(@Param("source") String source,
+                                   @Param("externalId") String externalId);
 
-    /**
-     * insert record to table selective
-     * @param record the record
-     * @return insert count
-     */
-    int insertSelective(Merchant record);
+    /** 新增商家，插入后会回填 id */
+    int insert(Merchant merchant);
 
-    /**
-     * select by primary key
-     * @param id primary key
-     * @return object by primary key
-     */
-    Merchant selectByPrimaryKey(Long id);
+    /** 查询某用户自己创建的商家列表 */
+    List<Merchant> findByCreator(@Param("userId") Long userId);
 
-    /**
-     * update record selective
-     * @param record the updated record
-     * @return update count
-     */
-    int updateByPrimaryKeySelective(Merchant record);
+    /** 根据主键查商家 */
+    Merchant findById(@Param("id") Long id);
 
-    /**
-     * update record
-     * @param record the updated record
-     * @return update count
-     */
-    int updateByPrimaryKey(Merchant record);
+    /** 合并帖子到指定商家 */
+    void mergePost(@Param("targetId") Long targetId,
+                   @Param("postId") Long postId);
 
     List<Merchant> selectByIds(@Param("ids") List<Long> ids);
-
 }

@@ -2,6 +2,10 @@ package com.example.feedbacker.mapper;
 
 import com.example.feedbacker.entity.Post;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.Collection;
+import java.util.List;
 
 @Mapper
 public interface PostMapper {
@@ -46,4 +50,6 @@ public interface PostMapper {
      * @return update count
      */
     int updateByPrimaryKey(Post record);
+
+    List<Post> findByCircle(@Param("circleId") Long circleId);
 }

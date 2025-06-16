@@ -51,10 +51,19 @@ public interface MerchantFavoriteMapper {
     int updateByPrimaryKey(MerchantFavorite record);
 
 
-    int exists(Long userId, Long merchantId);
+    int exists(@Param("userId") Long userId, @Param("merchantId") Long merchantId);
 
-    void deleteByUserIdAndMerchantId(Long userId, Long merchantId);
+    void deleteByUserIdAndMerchantId(@Param("userId") Long userId, @Param("merchantId") Long merchantId);
 
-    List<Long> selectFavoriteMerchantIds(@Param("userId") Long userId);
+    List<Long> selectFavoriteMerchantIds(
+            @Param("userId") Long userId,
+            @Param("offset") int offset,
+            @Param("limit") int limit
+    );
+
+    /**
+     * 统计当前用户收藏的商家总数
+     */
+    long countFavoritesByUserId(@Param("userId") Long userId);
 
 }

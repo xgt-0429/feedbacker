@@ -1,8 +1,12 @@
 package com.example.feedbacker.mapper;
 
 import com.example.feedbacker.entity.PostTag;
+import com.example.feedbacker.entity.Tag;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.Collection;
+import java.util.List;
 
 @Mapper
 public interface PostTagMapper {
@@ -26,4 +30,9 @@ public interface PostTagMapper {
      * @return insert count
      */
     int insertSelective(PostTag record);
+
+
+    int delete(@Param("postId") Long postId);
+
+    List<Tag> findByPostId(Long id);
 }

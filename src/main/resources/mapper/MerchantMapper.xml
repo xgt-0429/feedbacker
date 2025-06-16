@@ -1,121 +1,112 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
 <mapper namespace="com.example.feedbacker.mapper.MerchantMapper">
-  <resultMap id="BaseResultMap" type="com.example.feedbacker.entity.Merchant">
-    <!--@mbg.generated-->
-    <!--@Table merchants-->
-    <id column="id" jdbcType="BIGINT" property="id" />
-    <result column="name" jdbcType="VARCHAR" property="name" />
-    <result column="description" jdbcType="LONGVARCHAR" property="description" />
-    <result column="contact_info" jdbcType="VARCHAR" property="contactInfo" />
-    <result column="created_at" jdbcType="TIMESTAMP" property="createdAt" />
-    <result column="updated_at" jdbcType="TIMESTAMP" property="updatedAt" />
-  </resultMap>
+
+  <!-- 列集合 -->
   <sql id="Base_Column_List">
-    <!--@mbg.generated-->
-    id, `name`, description, contact_info, created_at, updated_at
+    id,
+    name,
+    description,
+    contact_info,
+    address,
+    latitude,
+    longitude,
+    external_source,
+    external_id,
+    created_by,
+    created_at,
+    updated_at
   </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    <!--@mbg.generated-->
-    select 
-    <include refid="Base_Column_List" />
-    from merchants
-    where id = #{id,jdbcType=BIGINT}
+
+  <!-- 结果映射 -->
+  <resultMap id="BaseResultMap" type="com.example.feedbacker.entity.Merchant">
+    <id     property="id"             column="id"/>
+    <result property="name"           column="name"/>
+    <result property="description"    column="description"/>
+    <result property="contactInfo"    column="contact_info"/>
+    <result property="address"        column="address"/>
+    <result property="latitude"       column="latitude"/>
+    <result property="longitude"      column="longitude"/>
+    <result property="externalSource" column="external_source"/>
+    <result property="externalId"     column="external_id"/>
+    <result property="createdBy"      column="created_by"/>
+    <result property="createdAt"      column="created_at"/>
+    <result property="updatedAt"      column="updated_at"/>
+  </resultMap>
+
+  <!-- 1. 根据外部来源 + 外部 ID 查商家 -->
+  <select id="findBySourceExternal"
+          resultMap="BaseResultMap"
+          parameterType="map">
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM merchants
+    WHERE external_source = #{source}
+    AND external_id     = #{externalId}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    <!--@mbg.generated-->
-    delete from merchants
-    where id = #{id,jdbcType=BIGINT}
-  </delete>
-  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.example.feedbacker.entity.Merchant" useGeneratedKeys="true">
-    <!--@mbg.generated-->
-    insert into merchants (`name`, description, contact_info, 
-      created_at, updated_at)
-    values (#{name,jdbcType=VARCHAR}, #{description,jdbcType=LONGVARCHAR}, #{contactInfo,jdbcType=VARCHAR}, 
-      #{createdAt,jdbcType=TIMESTAMP}, #{updatedAt,jdbcType=TIMESTAMP})
+
+  <!-- 2. 插入商家，返回自增主键 id -->
+  <insert id="insert"
+          parameterType="com.example.feedbacker.entity.Merchant"
+          useGeneratedKeys="true"
+          keyProperty="id">
+    INSERT INTO merchants
+    (name,description,contact_info,address,latitude,longitude,
+    external_source,external_id,created_by,created_at,updated_at)
+    VALUES
+    (
+    #{name},
+    #{description},
+    #{contactInfo},
+    #{address},
+    #{latitude},
+    #{longitude},
+    #{externalSource},
+    #{externalId},
+    #{createdBy},
+    NOW(),
+    NOW()
+    )
   </insert>
-  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.example.feedbacker.entity.Merchant" useGeneratedKeys="true">
-    <!--@mbg.generated-->
-    insert into merchants
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="name != null">
-        `name`,
-      </if>
-      <if test="description != null">
-        description,
-      </if>
-      <if test="contactInfo != null">
-        contact_info,
-      </if>
-      <if test="createdAt != null">
-        created_at,
-      </if>
-      <if test="updatedAt != null">
-        updated_at,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="name != null">
-        #{name,jdbcType=VARCHAR},
-      </if>
-      <if test="description != null">
-        #{description,jdbcType=LONGVARCHAR},
-      </if>
-      <if test="contactInfo != null">
-        #{contactInfo,jdbcType=VARCHAR},
-      </if>
-      <if test="createdAt != null">
-        #{createdAt,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updatedAt != null">
-        #{updatedAt,jdbcType=TIMESTAMP},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.example.feedbacker.entity.Merchant">
-    <!--@mbg.generated-->
-    update merchants
-    <set>
-      <if test="name != null">
-        `name` = #{name,jdbcType=VARCHAR},
-      </if>
-      <if test="description != null">
-        description = #{description,jdbcType=LONGVARCHAR},
-      </if>
-      <if test="contactInfo != null">
-        contact_info = #{contactInfo,jdbcType=VARCHAR},
-      </if>
-      <if test="createdAt != null">
-        created_at = #{createdAt,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updatedAt != null">
-        updated_at = #{updatedAt,jdbcType=TIMESTAMP},
-      </if>
-    </set>
-    where id = #{id,jdbcType=BIGINT}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.example.feedbacker.entity.Merchant">
-    <!--@mbg.generated-->
-    update merchants
-    set `name` = #{name,jdbcType=VARCHAR},
-      description = #{description,jdbcType=LONGVARCHAR},
-      contact_info = #{contactInfo,jdbcType=VARCHAR},
-      created_at = #{createdAt,jdbcType=TIMESTAMP},
-      updated_at = #{updatedAt,jdbcType=TIMESTAMP}
-    where id = #{id,jdbcType=BIGINT}
+
+  <!-- 3. 查询某用户自己创建的商家列表 -->
+  <select id="findByCreator"
+          resultMap="BaseResultMap"
+          parameterType="long">
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM merchants
+    WHERE created_by = #{userId}
+    ORDER BY created_at DESC
+  </select>
+
+  <!-- 4. 根据主键查询商家详情 -->
+  <select id="findById"
+          resultMap="BaseResultMap"
+          parameterType="long">
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM merchants
+    WHERE id = #{id}
+  </select>
+
+  <!-- 5. 合并帖子到指定商家（更新 posts 表） -->
+  <update id="mergePost"
+          parameterType="map">
+    UPDATE posts
+    SET merchant_id = #{targetId}
+    WHERE id          = #{postId}
   </update>
 
-  <select id="selectByIds" parameterType="java.util.List" resultMap="BaseResultMap">
+  <select id="selectByIds" parameterType="map" resultMap="BaseResultMap">
     SELECT
-        id,
-        name,
-        description,
-        contact_info,
-        created_at,
-        updated_at
+    <include refid="Base_Column_List"/>
     FROM merchants
     WHERE id IN
-    <foreach item="id" collection="ids" open="(" separator="," close=")">
+    <foreach collection="ids" item="id" open="(" separator="," close=")">
       #{id}
     </foreach>
   </select>

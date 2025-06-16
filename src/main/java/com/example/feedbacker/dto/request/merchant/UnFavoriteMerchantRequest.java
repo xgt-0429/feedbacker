@@ -2,7 +2,7 @@ package com.example.feedbacker.dto.request.merchant;
 
 import jakarta.validation.constraints.NotNull;
 
-public class UnfavoriteMerchantRequest {
+public class UnFavoriteMerchantRequest {
 
     @NotNull(message = "merchantId 不能为空")
     private Long merchantId;

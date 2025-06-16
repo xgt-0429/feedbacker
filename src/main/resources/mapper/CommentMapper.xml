@@ -93,4 +93,11 @@
       created_at = #{createdAt,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <select id="findByPostId" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from comments
+    where post_id = #{postId,jdbcType=BIGINT}
+  </select>
 </mapper>

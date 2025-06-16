@@ -1,35 +1,19 @@
-package com.example.feedbacker.dto.request.merchant;
+package com.example.feedbacker.dto.response.merchant;
 
-import jakarta.validation.constraints.NotBlank;
+public class MerchantSummary {
 
-public class CreateMerchantRequest {
-
-    @NotBlank public String source;
-
-    @NotBlank public String externalId;
-
-    @NotBlank public String name;
-
-    @NotBlank public String address;
-
+    public Long id;
+    public String name;
+    public String address;
     public Double latitude;
-
     public Double longitude;
 
-    public String getSource() {
-        return source;
+    public Long getId() {
+        return id;
     }
 
-    public void setSource(String source) {
-        this.source = source;
-    }
-
-    public String getExternalId() {
-        return externalId;
-    }
-
-    public void setExternalId(String externalId) {
-        this.externalId = externalId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -63,4 +47,5 @@ public class CreateMerchantRequest {
     public void setLongitude(Double longitude) {
         this.longitude = longitude;
     }
+
 }

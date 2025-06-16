@@ -4,8 +4,8 @@ import com.example.feedbacker.dto.request.merchant.CreateMerchantRequest;
 import com.example.feedbacker.dto.request.merchant.DeleteMerchantRequest;
 import com.example.feedbacker.dto.request.merchant.UpdateMerchantRequest;
 
-import com.example.feedbacker.entity.MerchantImage;
 import com.example.feedbacker.entity.Merchant;
+import com.example.feedbacker.entity.MerchantImage;
 import com.example.feedbacker.exception.ApiException;
 import com.example.feedbacker.mapper.AdminMerchantMapper;
 import com.example.feedbacker.mapper.MerchantImageMapper;
@@ -31,8 +31,6 @@ public class AdminMerchantServiceImpl implements AdminMerchantService {
     public Long create(CreateMerchantRequest req) {
         Merchant m = new Merchant();
         m.setName(req.getName());
-        m.setDescription(req.getDescription());
-        m.setContactInfo(req.getContactInfo());
         adminMerchantMapper.insert(m);
         return m.getId();
     }

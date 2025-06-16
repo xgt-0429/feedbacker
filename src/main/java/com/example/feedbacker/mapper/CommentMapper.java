@@ -3,6 +3,9 @@ package com.example.feedbacker.mapper;
 import com.example.feedbacker.entity.Comment;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.Collection;
+import java.util.List;
+
 @Mapper
 public interface CommentMapper {
     /**
@@ -46,4 +49,6 @@ public interface CommentMapper {
      * @return update count
      */
     int updateByPrimaryKey(Comment record);
+
+    List<Comment> findByPostId(Long id);
 }
