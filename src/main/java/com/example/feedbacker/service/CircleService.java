@@ -4,7 +4,7 @@ import com.example.feedbacker.dto.request.circle.*;
 import com.example.feedbacker.dto.response.circle.ApplicationResponse;
 import com.example.feedbacker.dto.response.circle.InvitationResponse;
 import com.example.feedbacker.dto.response.post.PostSummary;
-import org.springframework.stereotype.Service;
+
 
 import java.util.List;
 
