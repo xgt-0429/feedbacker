@@ -93,4 +93,22 @@
       joined_at = #{joinedAt,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
+  <select id="findUserIdsByCircle" parameterType="long" resultType="long">
+    SELECT user_id
+    FROM circle_members
+    WHERE circle_id = #{circleId}
+  </select>
+
+  <select id="findCircleIdsByUser" parameterType="long" resultType="long">
+    SELECT circle_id
+    FROM circle_members
+    WHERE user_id = #{userId}
+  </select>
+
+  <select id="exists" parameterType="map" resultType="int">
+    SELECT COUNT(1)
+    FROM circle_members
+    WHERE circle_id = #{circleId}
+      AND user_id   = #{userId}
+  </select>
 </mapper>

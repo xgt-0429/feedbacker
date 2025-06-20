@@ -1,7 +1,9 @@
 package com.example.feedbacker.mapper;
 
 import com.example.feedbacker.entity.CircleApplication;
+import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
 
 public interface CircleApplicationMapper {
     /**
@@ -45,4 +47,12 @@ public interface CircleApplicationMapper {
      * @return update count
      */
     int updateByPrimaryKey(CircleApplication record);
+
+    /** 圈主查看待处理申请 */
+    List<CircleApplication> findPendingByCircle(@Param("circleId") Long circleId);
+
+    /** 同意或拒绝申请 */
+    int updateStatus(@Param("id")     Long id,
+                     @Param("status") String status);
+
 }

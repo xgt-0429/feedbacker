@@ -82,4 +82,24 @@
       created_at = #{createdAt,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <!-- 按主键查 -->
+  <select id="findById"
+          parameterType="long"
+          resultMap="BaseResultMap">
+    SELECT id, name, description, owner_id, created_at
+    FROM circles
+    WHERE id = #{id}
+  </select>
+
+  <!-- 按拥有者查 -->
+  <select id="findByOwner"
+          parameterType="long"
+          resultMap="BaseResultMap">
+    SELECT id, name, description, owner_id, created_at
+    FROM circles
+    WHERE owner_id = #{ownerId}
+    ORDER BY created_at DESC
+  </select>
+
 </mapper>

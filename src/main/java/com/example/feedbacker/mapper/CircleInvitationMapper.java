@@ -2,6 +2,9 @@ package com.example.feedbacker.mapper;
 
 import com.example.feedbacker.entity.CircleInvitation;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 @Mapper
 public interface CircleInvitationMapper {
@@ -46,4 +49,12 @@ public interface CircleInvitationMapper {
      * @return update count
      */
     int updateByPrimaryKey(CircleInvitation record);
+
+    /** 查看收到的未处理邀请 */
+    List<CircleInvitation> findPendingByInvitee(@Param("userId") Long userId);
+
+    /** 同意或拒绝邀请 */
+    int updateStatus(@Param("id")     Long id,
+                     @Param("status") String status);
+
 }

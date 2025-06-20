@@ -22,6 +22,8 @@ public class Circle {
 
     private Date createdAt;
 
+    private String description;
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -32,6 +34,7 @@ public class Circle {
         sb.append(", name=").append(name);
         sb.append(", ownerId=").append(ownerId);
         sb.append(", createdAt=").append(createdAt);
+        sb.append(", description=").append(description);
         sb.append("]");
         return sb.toString();
     }

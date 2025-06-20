@@ -117,4 +117,17 @@
       processed_by = #{processedBy,jdbcType=BIGINT}
     where id = #{id,jdbcType=BIGINT}
   </update>
+  <select id="findPendingByCircle" parameterType="long" resultMap="BaseResultMap">
+    SELECT *
+    FROM circle_applications
+    WHERE circle_id = #{circleId}
+      AND status    = 'PENDING'
+    ORDER BY applied_at DESC
+  </select>
+
+  <update id="updateStatus" parameterType="map">
+    UPDATE circle_applications
+    SET status = #{status}
+    WHERE id     = #{id}
+  </update>
 </mapper>

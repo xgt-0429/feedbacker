@@ -104,4 +104,17 @@
       created_at = #{createdAt,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
+  <select id="findPendingByInvitee" parameterType="long" resultMap="BaseResultMap">
+    SELECT *
+    FROM circle_invitations
+    WHERE invitee_id = #{userId}
+      AND status     = 'PENDING'
+    ORDER BY created_at DESC
+  </select>
+
+  <update id="updateStatus" parameterType="map">
+    UPDATE circle_invitations
+    SET status = #{status}
+    WHERE id     = #{id}
+  </update>
 </mapper>

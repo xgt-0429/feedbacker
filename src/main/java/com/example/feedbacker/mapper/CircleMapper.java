@@ -2,6 +2,9 @@ package com.example.feedbacker.mapper;
 
 import com.example.feedbacker.entity.Circle;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 @Mapper
 public interface CircleMapper {
@@ -46,4 +49,8 @@ public interface CircleMapper {
      * @return update count
      */
     int updateByPrimaryKey(Circle record);
+
+    Circle findById(@Param("id") Long id);
+
+    List<Circle> findByOwner(@Param("ownerId") Long ownerId);
 }

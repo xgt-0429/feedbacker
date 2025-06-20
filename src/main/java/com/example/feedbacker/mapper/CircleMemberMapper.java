@@ -2,6 +2,8 @@ package com.example.feedbacker.mapper;
 
 import com.example.feedbacker.entity.CircleMember;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import java.util.List;
 
 @Mapper
 public interface CircleMemberMapper {
@@ -46,4 +48,15 @@ public interface CircleMemberMapper {
      * @return update count
      */
     int updateByPrimaryKey(CircleMember record);
+
+    /** 本圈成员列表（只返回 userId） */
+    List<Long> findUserIdsByCircle(@Param("circleId") Long circleId);
+
+    /** 用户所在圈子列表（只返回 circleId） */
+    List<Long> findCircleIdsByUser(@Param("userId") Long userId);
+
+    /** 判断用户是否已在圈内 */
+    int exists(@Param("circleId") Long circleId,
+               @Param("userId")    Long userId);
+
 }
