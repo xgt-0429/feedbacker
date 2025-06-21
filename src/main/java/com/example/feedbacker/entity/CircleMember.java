@@ -1,5 +1,6 @@
 package com.example.feedbacker.entity;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -18,9 +19,9 @@ public class CircleMember {
     private Long userId;
 
     @NotNull(message = "不能为null")
-    private Object role;
+    private String role;
 
-    private Date joinedAt;
+    private LocalDateTime joinedAt;
 
     @Override
     public String toString() {

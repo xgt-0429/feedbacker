@@ -14,10 +14,10 @@ public class JwtAuthenticationFilter implements Filter {
         if(auth!=null && auth.startsWith("Bearer ")) {
             String token = auth.substring(7);
             try {
-                if(!JwtUtil.isBlacklisted(token)){
+                /*if(!JwtUtil.isBlacklisted(token)){
                     Long uid = JwtUtil.parseUserId(token);
                     CurrentUserUtil.setUserId(uid);
-                }
+                }*/
             } catch(Exception e){ /* token 无效 or 过期 */ }
         }
         try {

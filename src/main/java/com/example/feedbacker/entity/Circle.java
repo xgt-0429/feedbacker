@@ -1,5 +1,6 @@
 package com.example.feedbacker.entity;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -20,7 +21,7 @@ public class Circle {
     @NotNull(message = "不能为null")
     private Long ownerId;
 
-    private Date createdAt;
+    private LocalDateTime createdAt;
 
     private String description;
 

@@ -111,4 +111,18 @@
     from users
     where username = #{userName,jdbcType=VARCHAR}
   </select>
+
+  <select id="selectByEmail"
+          parameterType="string"
+          resultMap="BaseResultMap">
+    SELECT
+      id,
+      username,
+      password_hash,
+      email,
+      created_at,
+      updated_at
+    FROM users
+    WHERE email = #{email}
+  </select>
 </mapper>

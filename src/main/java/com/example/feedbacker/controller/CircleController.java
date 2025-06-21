@@ -3,9 +3,10 @@ package com.example.feedbacker.controller;
 
 import com.example.feedbacker.dto.request.circle.*;
 import com.example.feedbacker.dto.response.circle.ApplicationResponse;
+import com.example.feedbacker.dto.response.circle.CircleDetailResponse;
 import com.example.feedbacker.dto.response.circle.InvitationResponse;
-import com.example.feedbacker.dto.response.post.PostSummary;
 import com.example.feedbacker.service.CircleService;
+import com.example.feedbacker.dto.response.post.PostSummary;
 import com.example.feedbacker.dto.response.ApiResponse;
 import com.example.feedbacker.utils.CurrentUserUtil;
 import jakarta.validation.Valid;
@@ -16,61 +17,82 @@ import java.util.List;
 @RequestMapping("/api/circles")
 public class CircleController {
 
-    private final CircleService svc;
-    public CircleController(CircleService svc){
-        this.svc = svc;
+    private final CircleService circleService;
+
+    public CircleController(CircleService circleService){
+        this.circleService = circleService;
     }
 
     /** 创建朋友圈 */
     @PostMapping("/create")
     public ResponseEntity<ApiResponse<Long>> create(
             @Valid @RequestBody CreateCircleRequest req) {
-        return ResponseEntity.ok(ApiResponse.success(svc.createCircle(req)));
+        return ResponseEntity.ok(ApiResponse.success(circleService.createCircle(req)));
+    }
+
+    /**
+     * 查看朋友圈
+     * @param req
+     * @return
+     */
+    @PostMapping("/detail")
+    public ResponseEntity<ApiResponse<CircleDetailResponse>> detail(
+            @Valid @RequestBody CircleDetailRequest req) {
+        CircleDetailResponse resp = circleService.getCircleDetail(req.getCircleId());
+        return ResponseEntity.ok(ApiResponse.success(resp));
+    }
+
+    /** 编辑朋友圈详情（仅圈主可调用） */
+    @PostMapping("/update")
+    public ResponseEntity<ApiResponse<Void>> updateCircle(
+            @Valid @RequestBody UpdateCircleRequest req) {
+        circleService.updateCircle(req);
+        return ResponseEntity.ok(ApiResponse.success(null));
     }
 
     /** 邀请用户加入 */
     @PostMapping("/invite")
     public ResponseEntity<ApiResponse<Void>> invite(
             @Valid @RequestBody InviteRequest req) {
-        svc.invite(req);
+        circleService.invite(req);
         return ResponseEntity.ok(ApiResponse.success(null));
     }
 
-    /** 查看收到的邀请 */
-    @GetMapping("/invites")
+    /** 用户查看邀请列表 */
+    @GetMapping("/invitations/list")
     public ResponseEntity<ApiResponse<List<InvitationResponse>>> invites(){
         Long uid = CurrentUserUtil.getUserId();
-        return ResponseEntity.ok(ApiResponse.success(svc.listInvites(uid)));
+        return ResponseEntity.ok(ApiResponse.success(circleService.listInvites(uid)));
     }
 
-    /** 处理邀请 */
-    @PostMapping("/invite/respond")
+    /** 用户处理邀请请求 */
+    @PostMapping("/invitations/process")
     public ResponseEntity<ApiResponse<Void>> respondInvite(
             @Valid @RequestBody RespondInviteRequest req) {
-        svc.respondInvite(req);
+        circleService.respondInvite(req);
         return ResponseEntity.ok(ApiResponse.success(null));
     }
 
     /** 申请加入 */
-    @PostMapping("/apply")
-    public ResponseEntity<ApiResponse<Void>> apply(
+    @PostMapping("/join")
+    public ResponseEntity<ApiResponse<Void>> join(
             @Valid @RequestBody ApplyRequest req) {
-        svc.apply(req);
+        circleService.join(req);
         return ResponseEntity.ok(ApiResponse.success(null));
     }
 
-    /** 管理员查看申请 */
-    @GetMapping("/{circleId}/applications")
+    /** 管理员查看加入请求 */
+    @PostMapping("/applications/list")
     public ResponseEntity<ApiResponse<List<ApplicationResponse>>> applications(
             @PathVariable Long circleId) {
-        return ResponseEntity.ok(ApiResponse.success(svc.listApplications(circleId)));
+        return ResponseEntity.ok(ApiResponse.success(circleService.listApplications(circleId)));
     }
 
-    /** 处理申请 */
-    @PostMapping("/apply/respond")
+    /** 管理员处理加入请求 */
+    @PostMapping("/application/process")
     public ResponseEntity<ApiResponse<Void>> respondApplication(
             @Valid @RequestBody RespondApplicationRequest req) {
-        svc.respondApplication(req);
+        circleService.respondApplication(req);
         return ResponseEntity.ok(ApiResponse.success(null));
     }
 
@@ -78,7 +100,7 @@ public class CircleController {
     @PostMapping("/remove")
     public ResponseEntity<ApiResponse<Void>> removeMember(
             @Valid @RequestBody RemoveMemberRequest req) {
-        svc.removeMember(req);
+        circleService.removeMember(req);
         return ResponseEntity.ok(ApiResponse.success(null));
     }
 
@@ -86,12 +108,12 @@ public class CircleController {
     @PostMapping("/posts")
     public ResponseEntity<ApiResponse<List<PostSummary>>> postsInCircle(
             @Valid @RequestBody ListCirclePostsRequest req) {
-        return ResponseEntity.ok(ApiResponse.success(svc.listPostsInCircle(req)));
+        return ResponseEntity.ok(ApiResponse.success(circleService.listPostsInCircle(req)));
     }
 
     /** 查看所有加入的圈子的帖子 */
-    @GetMapping("/posts/all")
+    @PostMapping("/posts/all")
     public ResponseEntity<ApiResponse<List<PostSummary>>> postsInAllCircles(){
-        return ResponseEntity.ok(ApiResponse.success(svc.listPostsInAllCircles()));
+        return ResponseEntity.ok(ApiResponse.success(circleService.listPostsInAllCircles()));
     }
 }

@@ -22,7 +22,7 @@ public class ProfileController {
     }
 
     /** 查看当前登录用户资料 */
-    @PostMapping("/get")
+    @PostMapping("/detail")
     public ResponseEntity<ApiResponse<ProfileResponse>> getProfile() {
         ProfileResponse resp = profileService.getCurrentUserProfile();
         return ResponseEntity.ok(ApiResponse.success(resp));

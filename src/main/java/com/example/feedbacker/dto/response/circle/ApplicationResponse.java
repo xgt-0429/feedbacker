@@ -1,11 +1,14 @@
 package com.example.feedbacker.dto.response.circle;
 
+import java.util.Date;
+
 public class ApplicationResponse {
 
     public Long applicationId;
     public Long applicantId;
-    public ApplicationResponse(Long id,Long a){
-        this.applicationId=id; this.applicantId=a;
+    public Date appliedAt;
+    public ApplicationResponse(Long id,Long a, Date at) {
+        this.applicationId=id; this.applicantId=a; this.appliedAt=at;
     }
 
     public Long getApplicationId() {
@@ -24,4 +27,11 @@ public class ApplicationResponse {
         this.applicantId = applicantId;
     }
 
+    public Date getAppliedAt() {
+        return appliedAt;
+    }
+
+    public void setAppliedAt(Date appliedAt) {
+        this.appliedAt = appliedAt;
+    }
 }

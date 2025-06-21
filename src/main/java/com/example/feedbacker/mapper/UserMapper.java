@@ -53,4 +53,6 @@ public interface UserMapper {
      * @return update count
      */
     int updateByPrimaryKey(User record);
+
+    User selectByEmail(String email);
 }

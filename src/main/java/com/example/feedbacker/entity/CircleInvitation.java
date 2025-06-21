@@ -1,5 +1,6 @@
 package com.example.feedbacker.entity;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -23,7 +24,7 @@ public class CircleInvitation {
     @NotNull(message = "不能为null")
     private Object status;
 
-    private Date createdAt;
+    private LocalDateTime createdAt;
 
     public Long getId() {
         return id;
@@ -65,11 +66,11 @@ public class CircleInvitation {
         this.status = status;
     }
 
-    public Date getCreatedAt() {
+    public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Date createdAt) {
+    public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
 

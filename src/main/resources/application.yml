@@ -7,10 +7,19 @@ spring:
     username: root
     password: ${DB_PWD}
     driver-class-name: com.mysql.cj.jdbc.Driver
-  data:
-    redis:
-      host: 172.31.7.3
-      port: 6379
+
+  mail:
+      host: smtp.qq.com
+      port: 587
+      username: 490377187@qq.com
+      password: khhocvtqosxycafd
+      properties.mail.smtp.auth: true
+      properties.mail.smtp.starttls.enable: true
+      properties.mail.smtp.ssl.trust: smtp.qq.com
+  redis:
+    host: 13.210.204.61
+    port: 6379
+    timeout: 5000
 
 mybatis:
   mapper-locations: classpath:mapper/*.xml

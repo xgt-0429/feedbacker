@@ -1,5 +1,7 @@
 package com.example.feedbacker.service.impl;
 
+import com.example.feedbacker.dto.MemberDto;
+import com.example.feedbacker.dto.response.circle.CircleDetailResponse;
 import com.example.feedbacker.dto.request.circle.*;
 import com.example.feedbacker.dto.response.circle.ApplicationResponse;
 import com.example.feedbacker.dto.response.circle.InvitationResponse;
@@ -57,6 +59,26 @@ public class CircleServiceImpl implements CircleService {
     }
 
     @Override
+    public void updateCircle(UpdateCircleRequest req) {
+        Long uid = CurrentUserUtil.getUserId();
+        Circle existing = circleMapper.findById(req.getCircleId());
+        if (existing == null) {
+            throw new ApiException("圈子不存在");
+        }
+        if (!existing.getOwnerId().equals(uid)) {
+            throw new ApiException("只有圈主才能编辑");
+        }
+        Circle toUpdate = new Circle();
+        toUpdate.setId(req.getCircleId());
+        toUpdate.setName(req.getName());
+        toUpdate.setDescription(req.getDescription());
+        int rows = circleMapper.updateByPrimaryKeySelective(toUpdate);
+        if (rows == 0) {
+            throw new ApiException("更新失败，可能无权限或数据未变化");
+        }
+    }
+
+    @Override
     public void invite(InviteRequest req) {
         Long inviter = CurrentUserUtil.getUserId();
         if (memberMapper.exists(req.getCircleId(), inviter)==0) {
@@ -73,7 +95,7 @@ public class CircleServiceImpl implements CircleService {
     @Override
     public List<InvitationResponse> listInvites(Long userId) {
         return invMapper.findPendingByInvitee(userId).stream()
-                .map(inv -> new InvitationResponse(inv.getId(), inv.getCircleId(), inv.getInviterId()))
+                .map(inv -> new InvitationResponse(inv.getId(), inv.getCircleId(), inv.getInviterId(), inv.getCreatedAt()))
                 .collect(Collectors.toList());
     }
 
@@ -101,7 +123,7 @@ public class CircleServiceImpl implements CircleService {
      * @param req
      */
     @Override
-    public void apply(ApplyRequest req) {
+    public void join(ApplyRequest req) {
         Long uid = CurrentUserUtil.getUserId();
         CircleApplication circleApplication = new CircleApplication();
         circleApplication.setCircleId(req.getCircleId());
@@ -118,7 +140,7 @@ public class CircleServiceImpl implements CircleService {
     @Override
     public List<ApplicationResponse> listApplications(Long circleId) {
         return appMapper.findPendingByCircle(circleId).stream()
-                .map(app-> new ApplicationResponse(app.getId(), app.getUserId()))
+                .map(app-> new ApplicationResponse(app.getId(), app.getUserId(), app.getAppliedAt()))
                 .collect(Collectors.toList());
     }
 
@@ -149,11 +171,11 @@ public class CircleServiceImpl implements CircleService {
         if (!c.getOwnerId().equals(uid)) {
             throw new ApiException("仅圈主可踢人");
         }
-        memberMapper.deleteByPrimaryKey(req.getId());
+        memberMapper.delete(req.getCircleId(), req.getMemberId());
     }
 
     /**
-     * 查看当前朋友圈帖子
+     * 查看朋友圈帖子
      * @param req
      * @return
      */
@@ -180,6 +202,32 @@ public class CircleServiceImpl implements CircleService {
                 .flatMap(cid-> postMapper.findByCircle(cid).stream())
                 .map(postAsm::toSummary)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public CircleDetailResponse getCircleDetail(Long circleId) {
+        Circle c = circleMapper.findById(circleId);
+        if (c == null) {
+            throw new ApiException("圈子不存在");
+        }
+        List<CircleMember> members = memberMapper.findByCircleId(circleId);
+        List<MemberDto> dtos = members.stream()
+                .map(m -> new MemberDto(
+                        m.getId(),
+                        m.getUserId(),
+                        m.getRole(),
+                        m.getJoinedAt()
+                ))
+                .collect(Collectors.toList());
+
+        return new CircleDetailResponse(
+                c.getId(),
+                c.getName(),
+                c.getDescription(),
+                c.getOwnerId(),
+                c.getCreatedAt(),
+                dtos
+        );
     }
 
 }

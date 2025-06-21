@@ -59,4 +59,7 @@ public interface CircleMemberMapper {
     int exists(@Param("circleId") Long circleId,
                @Param("userId")    Long userId);
 
+    List<CircleMember> findByCircleId(@Param("circleId") Long circleId);
+
+    int delete(Long circleId, Long userId);
 }
