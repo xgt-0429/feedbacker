@@ -8,6 +8,14 @@ spring:
     password: ${DB_PWD}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
+  # JPA/Hibernate 强制方言 + DDL 策略
+  jpa:
+    # 请根据你的 MySQL 版本选择对应方言
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    show-sql: true       # 可选，启动时打印 SQL
+    hibernate:
+      ddl-auto: update   # 开发环境用 update，生产环境可改为 validate/none
+
   mail:
       host: smtp.qq.com
       port: 587
