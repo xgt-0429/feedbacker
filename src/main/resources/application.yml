@@ -3,7 +3,12 @@ spring:
     name: Feedbacker
 
   datasource:
-    url: jdbc:mysql://13.210.204.61:3306/feedbacker?useSSL=false&serverTimezone=UTC&characterEncoding=utf8
+    url: >-
+      jdbc:mysql://13.210.204.61:3306/feedbacker
+      ?allowPublicKeyRetrieval=true
+      &useSSL=false
+      &serverTimezone=UTC
+      &characterEncoding=utf8
     username: root
     password: ${DB_PWD}
     driver-class-name: com.mysql.cj.jdbc.Driver
