@@ -6,6 +6,7 @@ import com.example.feedbacker.dto.request.post.*;
 import com.example.feedbacker.dto.response.post.CommentResponse;
 import com.example.feedbacker.dto.response.post.PostDetailResponse;
 import com.example.feedbacker.dto.response.post.PostSummary;
+import com.example.feedbacker.dto.response.post.PostSummaryAssembler;
 import com.example.feedbacker.entity.*;
 import com.example.feedbacker.exception.ApiException;
 import com.example.feedbacker.mapper.*;
@@ -15,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class PostServiceImpl implements PostService {
@@ -25,18 +25,23 @@ public class PostServiceImpl implements PostService {
     private final PostTagMapper postTagMapper;
     private final CommentMapper commentMapper;
     private final MerchantMapper merchantMapper;
-
+    private final CircleMemberMapper memberMapper;
+    private final PostSummaryAssembler postAsm;
     private final com.example.feedbacker.service.MerchantService merchantService;
+    private final PostImageMapper postImageMapper;
 
     public PostServiceImpl(PostMapper pm, TagMapper tm,
-                           PostTagMapper ptm, CommentMapper cm, MerchantMapper mmp,
-                           com.example.feedbacker.service.MerchantService ms) {
+                           PostTagMapper ptm, CommentMapper cm, MerchantMapper mmp, CircleMemberMapper memberMapper, PostSummaryAssembler postAsm,
+                           com.example.feedbacker.service.MerchantService ms, PostImageMapper postImageMapper) {
         this.postMapper      = pm;
         this.tagMapper       = tm;
         this.postTagMapper   = ptm;
         this.commentMapper   = cm;
+        this.memberMapper = memberMapper;
+        this.postAsm = postAsm;
         this.merchantService = ms;
         this.merchantMapper = mmp;
+        this.postImageMapper = postImageMapper;
     }
 
     @Override
@@ -44,9 +49,9 @@ public class PostServiceImpl implements PostService {
     public Long create(CreatePostRequest req) {
         Long userId = CurrentUserUtil.getUserId();
 
-        // 1. 先根据 externalSource + externalId 查商家
+        // 1. 先根据 externalId 查商家
         Merchant merchant = merchantMapper.findBySourceExternal(
-                req.getSource(), req.getExternalId()
+                req.getExternalId()
         );
 
         // 2. 如果没查到，就新建一条
@@ -56,7 +61,6 @@ public class PostServiceImpl implements PostService {
             merchant.setAddress(req.getAddress());
             merchant.setLatitude(req.getLatitude());
             merchant.setLongitude(req.getLongitude());
-            merchant.setExternalSource(req.getSource());
             merchant.setExternalId(req.getExternalId());
             merchant.setCreatedBy(userId);
             merchantMapper.insert(merchant);
@@ -68,12 +72,14 @@ public class PostServiceImpl implements PostService {
         post.setAuthorId(userId);
         post.setCircleId(req.getCircleId());
         post.setMerchantId(merchantId);
-        post.setTitle(req.getTitle());
+        post.setName(req.getName());
         post.setContent(req.getContent());
         post.setScore(req.getScore());
+        post.setType(req.getType());
+        post.setPriceLevel(req.getPriceLevel());
         postMapper.insert(post);
 
-        // 4. 处理标签（可选）
+        // 处理标签
         if (req.getTags() != null) {
             for (String tagName : req.getTags()) {
                 Tag tag = tagMapper.findByName(tagName);
@@ -86,20 +92,72 @@ public class PostServiceImpl implements PostService {
             }
         }
 
+        // 处理图片
+        if (req.getImages() != null) {
+            for (String url : req.getImages()) {
+                PostImage postImage = new PostImage();
+                postImage.setUrl(url);
+                postImage.setPostId(post.getId());
+                postImageMapper.insert(postImage);
+            }
+        }
         return post.getId();
     }
 
     @Override
     public List<PostSummary> listByCircle(ListPostsRequest req) {
-        postMapper.findByCircle(req.getCircleId()).stream().map(p -> {
-            return new PostSummary(
-                    p.getId(), p.getCircleId(), p.getMerchantId(),
-                    p.getTitle(), p.getScore(), p.getCreatedAt()
-            );
-        }).collect(Collectors.toList());
+        List<Post> posts = postMapper.selectPostList(req);
+        List<PostSummary> summaries = new ArrayList<>();
 
-        return null;
+        for (Post p : posts) {
+            // 1. 基本字段映射
+            PostSummary summary = new PostSummary(
+                    p.getId(), p.getAuthorId(), p.getCircleId(), p.getMerchantId(),
+                    p.getName(), p.getContent(), p.getScore(),
+                    p.getCreatedAt(), p.getUpdatedAt(),
+                    p.getType(), p.getPriceLevel(), p.getImages()
+            );
+
+            // 2. 查询图片 URL 列表
+            List<String> images = postImageMapper.findUrlsByPostId(p.getId());
+            summary.setImages(images);
+            List<String> tagNames = postTagMapper.findNamesByPostId(p.getId());
+            summary.setTags(tagNames);
+
+            summaries.add(summary);
+        }
+
+        return summaries;
     }
+
+    /**
+     * 查看所有朋友圈内的帖子
+     * @return
+     */
+    @Override
+    public List<PostSummary> listPostsInAllCircles(ListPostsRequest req) {
+        // 1) 填充 circleIds
+        Long uid = CurrentUserUtil.getUserId();
+        req.setCircleIds(memberMapper.findCircleIdsByUser(uid));
+
+        // 2) 直接传 req 给 Mapper
+        List<Post> posts = postMapper.selectPostList(req);
+
+        // 3) 传统 for-loop 转 DTO 并去重
+        List<PostSummary> summaries = new ArrayList<>();
+        Set<Long> seen = new HashSet<>();
+        for (Post p : posts) {
+            if (seen.add(p.getId())) {
+                PostSummary s = postAsm.toSummary(p);
+                s.setImages(postImageMapper.findUrlsByPostId(p.getId()));
+                List<String> tagNames = postTagMapper.findNamesByPostId(p.getId());
+                s.setTags(tagNames);
+                summaries.add(s);
+            }
+        }
+        return summaries;
+    }
+
 
     @Override
     public PostDetailResponse detail(PostDetailRequest req) {
@@ -107,12 +165,9 @@ public class PostServiceImpl implements PostService {
         if (p == null) throw new ApiException("帖子不存在");
         PostDetailResponse detail = new PostDetailResponse(
                 p.getId(), p.getCircleId(), p.getMerchantId(),
-                p.getTitle(), p.getContent(),
+                p.getName(), p.getContent(),
                 p.getCreatedAt(), p.getScore()
         );
-        // 标签
-        detail.setTags(postTagMapper.findByPostId(p.getId())
-                .stream().map(Tag::getName).toList());
         // 评论
         detail.setComments(commentMapper.findByPostId(p.getId())
                 .stream().map(c -> new CommentResponse(
@@ -126,7 +181,7 @@ public class PostServiceImpl implements PostService {
         Post p = new Post();
         p.setId(req.getPostId());
         p.setCircleId(req.getCircleId());
-        p.setTitle(req.getTitle());
+        p.setName(req.getTitle());
         p.setContent(req.getContent());
         p.setScore(req.getScore());
         if (postMapper.updateByPrimaryKey(p) == 0) {

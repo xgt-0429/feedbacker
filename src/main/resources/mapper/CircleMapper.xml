@@ -27,9 +27,9 @@
   </delete>
   <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.example.feedbacker.entity.Circle" useGeneratedKeys="true">
     <!--@mbg.generated-->
-    insert into circles (`name`, owner_id, created_at
+    insert into circles (`name`, owner_id, created_at, description
       )
-    values (#{name,jdbcType=VARCHAR}, #{ownerId,jdbcType=BIGINT}, #{createdAt,jdbcType=TIMESTAMP}
+    values (#{name,jdbcType=VARCHAR}, #{ownerId,jdbcType=BIGINT}, #{createdAt,jdbcType=TIMESTAMP}, #{description,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.example.feedbacker.entity.Circle" useGeneratedKeys="true">
@@ -45,6 +45,9 @@
       <if test="createdAt != null">
         created_at,
       </if>
+      <if test="description != null">
+        description,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="name != null">
@@ -55,6 +58,9 @@
       </if>
       <if test="createdAt != null">
         #{createdAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="description != null">
+        #{description,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -71,6 +77,9 @@
       <if test="createdAt != null">
         created_at = #{createdAt,jdbcType=TIMESTAMP},
       </if>
+      <if test="description != null">
+        description = #{description,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -79,7 +88,8 @@
     update circles
     set `name` = #{name,jdbcType=VARCHAR},
       owner_id = #{ownerId,jdbcType=BIGINT},
-      created_at = #{createdAt,jdbcType=TIMESTAMP}
+      created_at = #{createdAt,jdbcType=TIMESTAMP},
+      description = #{description,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
 

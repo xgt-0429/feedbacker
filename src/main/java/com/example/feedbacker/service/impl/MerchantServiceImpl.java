@@ -104,7 +104,7 @@ public class MerchantServiceImpl implements MerchantService {
     @Override
     @Transactional
     public CreateMerchantResponse create(CreateMerchantRequest req){
-        Merchant m = merchantMapper.findBySourceExternal(req.source, req.externalId);
+        Merchant m = merchantMapper.findBySourceExternal(req.externalId);
         boolean isNew = (m==null);
         if(isNew){
             m = new Merchant();

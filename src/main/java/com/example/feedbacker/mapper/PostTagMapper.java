@@ -15,7 +15,7 @@ public interface PostTagMapper {
      * @param postId primaryKey
      * @return deleteCount
      */
-    int deleteByPrimaryKey(@Param("postId") Long postId, @Param("tagId") Long tagId);
+    //int deleteByPrimaryKey(@Param("postId") Long postId, @Param("tagId") Long tagId);
 
     /**
      * insert record to table
@@ -34,5 +34,5 @@ public interface PostTagMapper {
 
     int delete(@Param("postId") Long postId);
 
-    List<Tag> findByPostId(Long id);
+    List<String> findNamesByPostId(@Param("postId") Long postId);
 }

@@ -1,6 +1,7 @@
 package com.example.feedbacker.service.impl;
 
 import com.example.feedbacker.dto.MemberDto;
+import com.example.feedbacker.dto.request.post.ListPostsRequest;
 import com.example.feedbacker.dto.response.circle.CircleDetailResponse;
 import com.example.feedbacker.dto.request.circle.*;
 import com.example.feedbacker.dto.response.circle.ApplicationResponse;
@@ -24,21 +25,18 @@ public class CircleServiceImpl implements CircleService {
     private final CircleMemberMapper memberMapper;
     private final CircleInvitationMapper invMapper;
     private final CircleApplicationMapper appMapper;
-    private final PostMapper postMapper;
-    private final PostSummaryAssembler postAsm;
+
 
     public CircleServiceImpl(CircleMapper circleMapper,
                              CircleMemberMapper memberMapper,
                              CircleInvitationMapper invMapper,
-                             CircleApplicationMapper appMapper,
-                             PostMapper postMapper,
-                             PostSummaryAssembler postAsm) {
+                             CircleApplicationMapper appMapper
+                            ) {
         this.circleMapper = circleMapper;
         this.memberMapper = memberMapper;
         this.invMapper    = invMapper;
         this.appMapper    = appMapper;
-        this.postMapper   = postMapper;
-        this.postAsm      = postAsm;
+
     }
 
     @Override @Transactional
@@ -172,36 +170,6 @@ public class CircleServiceImpl implements CircleService {
             throw new ApiException("仅圈主可踢人");
         }
         memberMapper.delete(req.getCircleId(), req.getMemberId());
-    }
-
-    /**
-     * 查看朋友圈帖子
-     * @param req
-     * @return
-     */
-    @Override
-    public List<PostSummary> listPostsInCircle(ListCirclePostsRequest req) {
-        // check membership
-        Long uid = CurrentUserUtil.getUserId();
-        if (memberMapper.exists(req.getCircleId(), uid)==0) {
-            throw new ApiException("你不在圈内");
-        }
-        return postMapper.findByCircle(req.getCircleId()).stream()
-                .map(postAsm::toSummary).toList();
-    }
-
-    /**
-     * 查看所有朋友圈内的帖子
-     * @return
-     */
-    @Override
-    public List<PostSummary> listPostsInAllCircles() {
-        Long uid = CurrentUserUtil.getUserId();
-        List<Long> cids = memberMapper.findCircleIdsByUser(uid);
-        return cids.stream()
-                .flatMap(cid-> postMapper.findByCircle(cid).stream())
-                .map(postAsm::toSummary)
-                .collect(Collectors.toList());
     }
 
     @Override

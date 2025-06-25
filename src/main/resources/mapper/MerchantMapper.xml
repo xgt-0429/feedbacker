@@ -44,8 +44,7 @@
     SELECT
     <include refid="Base_Column_List"/>
     FROM merchants
-    WHERE external_source = #{source}
-    AND external_id     = #{externalId}
+    WHERE external_id     = #{externalId}
   </select>
 
   <!-- 2. 插入商家，返回自增主键 id -->

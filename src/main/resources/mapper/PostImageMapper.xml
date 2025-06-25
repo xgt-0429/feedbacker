@@ -27,9 +27,9 @@
   </delete>
   <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.example.feedbacker.entity.PostImage" useGeneratedKeys="true">
     <!--@mbg.generated-->
-    insert into post_images (post_id, url, created_at
+    insert into post_images (post_id, url
       )
-    values (#{postId,jdbcType=BIGINT}, #{url,jdbcType=VARCHAR}, #{createdAt,jdbcType=TIMESTAMP}
+    values (#{postId,jdbcType=BIGINT}, #{url,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.example.feedbacker.entity.PostImage" useGeneratedKeys="true">

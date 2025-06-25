@@ -3,6 +3,7 @@ package com.example.feedbacker.service;
 import com.example.feedbacker.dto.request.post.*;
 import com.example.feedbacker.dto.response.post.PostDetailResponse;
 import com.example.feedbacker.dto.response.post.PostSummary;
+import jakarta.validation.Valid;
 
 import java.util.List;
 
@@ -15,4 +16,5 @@ public interface PostService {
     void comment(CreateCommentRequest req);
     void deleteComment(DeleteCommentRequest req);
 
+    List<PostSummary> listPostsInAllCircles(@Valid ListPostsRequest req);
 }

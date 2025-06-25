@@ -10,8 +10,7 @@ import java.util.List;
 public interface MerchantMapper {
 
     /** 根据外部来源和 ID 查商家 */
-    Merchant findBySourceExternal(@Param("source") String source,
-                                   @Param("externalId") String externalId);
+    Merchant findBySourceExternal(@Param("externalId") String externalId);
 
     /** 新增商家，插入后会回填 id */
     int insert(Merchant merchant);

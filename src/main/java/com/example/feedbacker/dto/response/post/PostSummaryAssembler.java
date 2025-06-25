@@ -12,11 +12,17 @@ public class PostSummaryAssembler {
     public PostSummary toSummary(Post p) {
         return new PostSummary(
                 p.getId(),
+                p.getAuthorId(),
                 p.getCircleId(),
                 p.getMerchantId(),
-                p.getTitle(),
+                p.getName(),
+                p.getContent(),
                 p.getScore(),
-                p.getCreatedAt()
+                p.getCreatedAt(),
+                p.getUpdatedAt(),
+                p.getType(),
+                p.getPriceLevel(),
+                p.getImages()
         );
     }
 

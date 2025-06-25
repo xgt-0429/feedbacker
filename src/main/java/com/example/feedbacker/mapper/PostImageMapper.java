@@ -2,6 +2,9 @@ package com.example.feedbacker.mapper;
 
 import com.example.feedbacker.entity.PostImage;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
+
+import java.util.List;
 
 @Mapper
 public interface PostImageMapper {
@@ -46,4 +49,7 @@ public interface PostImageMapper {
      * @return update count
      */
     int updateByPrimaryKey(PostImage record);
+
+    @Select("SELECT url FROM post_images WHERE post_id = #{postId}")
+    List<String> findUrlsByPostId(Long id);
 }

@@ -6,19 +6,18 @@ import java.util.List;
 
 public class CreatePostRequest {
 
+    @NotBlank(message = "标题不能为空")
+    @Size(max = 255)
     private String name;
     private String address;
     private Double latitude;
     private Double longitude;
-    private String source;
     private String externalId;
+    private String type;
+    private String priceLevel;
 
     @NotNull(message = "circleId 不能为空")
     private Long circleId;
-
-    @NotBlank(message = "标题不能为空")
-    @Size(max = 255)
-    private String title;
 
     @NotBlank(message = "内容不能为空")
     private String content;
@@ -29,20 +28,14 @@ public class CreatePostRequest {
 
     private List<@NotBlank String> tags;
 
+    private List<String> images;
+
     public Long getCircleId() {
         return circleId;
     }
 
     public void setCircleId(Long circleId) {
         this.circleId = circleId;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 
     public String getContent() {
@@ -61,13 +54,6 @@ public class CreatePostRequest {
         this.score = score;
     }
 
-    public String getSource() {
-        return source;
-    }
-
-    public void setSource(String source) {
-        this.source = source;
-    }
 
     public String getExternalId() {
         return externalId;
@@ -115,5 +101,29 @@ public class CreatePostRequest {
 
     public void setTags(List<String> tags) {
         this.tags = tags;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getPriceLevel() {
+        return priceLevel;
+    }
+
+    public void setPriceLevel(String priceLevel) {
+        this.priceLevel = priceLevel;
+    }
+
+    public List<String> getImages() {
+        return images;
+    }
+
+    public void setImages(List<String> images) {
+        this.images = images;
     }
 }

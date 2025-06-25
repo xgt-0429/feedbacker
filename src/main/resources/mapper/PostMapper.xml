@@ -8,16 +8,18 @@
     <result column="author_id" jdbcType="BIGINT" property="authorId" />
     <result column="circle_id" jdbcType="BIGINT" property="circleId" />
     <result column="merchant_id" jdbcType="BIGINT" property="merchantId" />
-    <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="content" jdbcType="LONGVARCHAR" property="content" />
     <result column="score" jdbcType="INTEGER" property="score" />
     <result column="created_at" jdbcType="TIMESTAMP" property="createdAt" />
     <result column="updated_at" jdbcType="TIMESTAMP" property="updatedAt" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="price_level" jdbcType="VARCHAR" property="priceLevel" />
   </resultMap>
 
   <sql id="Base_Column_List">
     <!--@mbg.generated-->
-    id, author_id, circle_id, merchant_id, title, content, score, created_at, updated_at
+    id, author_id, circle_id, merchant_id, name, content, score, created_at, updated_at, type, price_level
   </sql>
 
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
@@ -35,11 +37,11 @@
   <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.example.feedbacker.entity.Post" useGeneratedKeys="true">
     <!--@mbg.generated-->
     insert into posts (author_id, circle_id, merchant_id, 
-      title, content, score, 
-      created_at, updated_at)
+      name, content, score,
+      created_at, updated_at, type, price_level)
     values (#{authorId,jdbcType=BIGINT}, #{circleId,jdbcType=BIGINT}, #{merchantId,jdbcType=BIGINT}, 
-      #{title,jdbcType=VARCHAR}, #{content,jdbcType=LONGVARCHAR}, #{score,jdbcType=INTEGER}, 
-      #{createdAt,jdbcType=TIMESTAMP}, #{updatedAt,jdbcType=TIMESTAMP})
+      #{name,jdbcType=VARCHAR}, #{content,jdbcType=LONGVARCHAR}, #{score,jdbcType=INTEGER},
+      #{createdAt,jdbcType=TIMESTAMP}, #{updatedAt,jdbcType=TIMESTAMP}, #{type,jdbcType=VARCHAR}, #{priceLevel,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.example.feedbacker.entity.Post" useGeneratedKeys="true">
     <!--@mbg.generated-->
@@ -54,8 +56,8 @@
       <if test="merchantId != null">
         merchant_id,
       </if>
-      <if test="title != null">
-        title,
+      <if test="name != null">
+        name,
       </if>
       <if test="content != null">
         content,
@@ -69,6 +71,12 @@
       <if test="updatedAt != null">
         updated_at,
       </if>
+      <if test="type != null">
+        type,
+      </if>
+      <if test="priceLevel != null">
+        price_level,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="authorId != null">
@@ -80,8 +88,8 @@
       <if test="merchantId != null">
         #{merchantId,jdbcType=BIGINT},
       </if>
-      <if test="title != null">
-        #{title,jdbcType=VARCHAR},
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
       </if>
       <if test="content != null">
         #{content,jdbcType=LONGVARCHAR},
@@ -94,6 +102,12 @@
       </if>
       <if test="updatedAt != null">
         #{updatedAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="priceLevel != null">
+        #{priceLevel,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -110,8 +124,8 @@
       <if test="merchantId != null">
         merchant_id = #{merchantId,jdbcType=BIGINT},
       </if>
-      <if test="title != null">
-        title = #{title,jdbcType=VARCHAR},
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
       </if>
       <if test="content != null">
         content = #{content,jdbcType=LONGVARCHAR},
@@ -125,6 +139,12 @@
       <if test="updatedAt != null">
         updated_at = #{updatedAt,jdbcType=TIMESTAMP},
       </if>
+      <if test="type != null">
+        type = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="priceLevel != null">
+        price_level = #{priceLevel,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -134,18 +154,50 @@
     set author_id = #{authorId,jdbcType=BIGINT},
       circle_id = #{circleId,jdbcType=BIGINT},
       merchant_id = #{merchantId,jdbcType=BIGINT},
-      title = #{title,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
       content = #{content,jdbcType=LONGVARCHAR},
       score = #{score,jdbcType=INTEGER},
       created_at = #{createdAt,jdbcType=TIMESTAMP},
-      updated_at = #{updatedAt,jdbcType=TIMESTAMP}
+      updated_at = #{updatedAt,jdbcType=TIMESTAMP},
+      type = #{type,jdbcType=VARCHAR},
+      price_level = #{priceLevel,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
 
-  <select id="findByCircle" resultMap="BaseResultMap">
-    select
-    <include refid="Base_Column_List" />
-    from posts
-    where circle_id = #{circleId,jdbcType=BIGINT}
+  <select id="selectPostList"
+          parameterType="com.example.feedbacker.dto.request.post.ListPostsRequest"
+          resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM posts
+    <where>
+      circle_id = #{circleId,jdbcType=BIGINT}
+
+      AND merchant_id = #{merchantId,jdbcType=BIGINT}
+
+      <if test="authorId != null">
+        AND author_id = #{authorId,jdbcType=BIGINT}
+      </if>
+
+      <if test="tags != null and tags.size() &gt; 0">
+        AND EXISTS (
+        SELECT 1
+        FROM post_tag pt
+        JOIN tag t ON pt.tag_id = t.id
+        WHERE pt.post_id = posts.id
+        AND t.name IN
+        <foreach collection="tags" item="tag" open="(" separator="," close=")">
+          #{tag}
+        </foreach>
+        )
+      </if>
+    </where>
+
+    ORDER BY created_at DESC
+
+    <if test="page != null and size != null">
+      <bind name="offset" value="(page - 1) * size"/>
+      LIMIT #{size,jdbcType=INTEGER} OFFSET #{offset,jdbcType=INTEGER}
+    </if>
   </select>
 </mapper>

@@ -33,6 +33,13 @@ public class PostController {
         return ResponseEntity.ok(ApiResponse.success(svc.listByCircle(req)));
     }
 
+    /** 查看帖子列表 */
+    @PostMapping("/listAll")
+    public ResponseEntity<ApiResponse<List<PostSummary>>> listPostsInAllCircles(
+            @Valid @RequestBody ListPostsRequest req) {
+        return ResponseEntity.ok(ApiResponse.success(svc.listPostsInAllCircles(req)));
+    }
+
     /** 查看帖子详情 */
     @PostMapping("/detail")
     public ResponseEntity<ApiResponse<PostDetailResponse>> detail(

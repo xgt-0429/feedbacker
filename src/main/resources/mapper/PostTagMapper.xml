@@ -43,12 +43,13 @@
     </trim>
   </insert>
 
-  <select id="findByPostId" resultType="com.example.feedbacker.entity.Tag">
-    <!--@mbg.generated-->
-    select
-    <include refid="Base_Column_List" />
-    from post_tags
-    where post_id = #{id,jdbcType=BIGINT}
+  <select id="findNamesByPostId"
+          parameterType="long"
+          resultType="string">
+    select t.name
+    from post_tags pt
+           join tags t on pt.tag_id = t.id
+    where pt.post_id = #{postId,jdbcType=BIGINT}
   </select>
 
   <delete id="delete">

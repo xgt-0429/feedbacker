@@ -1,10 +1,9 @@
 package com.example.feedbacker.mapper;
 
+import com.example.feedbacker.dto.request.post.ListPostsRequest;
 import com.example.feedbacker.entity.Post;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
 
-import java.util.Collection;
 import java.util.List;
 
 @Mapper
@@ -51,5 +50,5 @@ public interface PostMapper {
      */
     int updateByPrimaryKey(Post record);
 
-    List<Post> findByCircle(@Param("circleId") Long circleId);
+    List<Post> selectPostList(ListPostsRequest circleId);
 }

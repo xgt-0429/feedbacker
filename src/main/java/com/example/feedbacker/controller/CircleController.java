@@ -104,16 +104,4 @@ public class CircleController {
         return ResponseEntity.ok(ApiResponse.success(null));
     }
 
-    /** 查看单个圈子内的帖子 */
-    @PostMapping("/posts")
-    public ResponseEntity<ApiResponse<List<PostSummary>>> postsInCircle(
-            @Valid @RequestBody ListCirclePostsRequest req) {
-        return ResponseEntity.ok(ApiResponse.success(circleService.listPostsInCircle(req)));
-    }
-
-    /** 查看所有加入的圈子的帖子 */
-    @PostMapping("/posts/all")
-    public ResponseEntity<ApiResponse<List<PostSummary>>> postsInAllCircles(){
-        return ResponseEntity.ok(ApiResponse.success(circleService.listPostsInAllCircles()));
-    }
 }
