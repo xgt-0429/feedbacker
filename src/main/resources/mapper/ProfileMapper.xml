@@ -26,7 +26,7 @@
     select
     <include refid="Base_Column_List" />
     from profiles
-    where id = #{id,jdbcType=BIGINT}
+    where user_id = #{userId,jdbcType=BIGINT}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     <!--@mbg.generated-->
