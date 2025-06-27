@@ -25,13 +25,14 @@ public class PostServiceImpl implements PostService {
     private final PostTagMapper postTagMapper;
     private final CommentMapper commentMapper;
     private final MerchantMapper merchantMapper;
+    private final CircleMerchantMapper circleMerchantMapper;
     private final CircleMemberMapper memberMapper;
     private final PostSummaryAssembler postAsm;
     private final com.example.feedbacker.service.MerchantService merchantService;
     private final PostImageMapper postImageMapper;
 
     public PostServiceImpl(PostMapper pm, TagMapper tm,
-                           PostTagMapper ptm, CommentMapper cm, MerchantMapper mmp, CircleMemberMapper memberMapper, PostSummaryAssembler postAsm,
+                           PostTagMapper ptm, CommentMapper cm, MerchantMapper mmp, CircleMerchantMapper cmm, CircleMemberMapper memberMapper, PostSummaryAssembler postAsm,
                            com.example.feedbacker.service.MerchantService ms, PostImageMapper postImageMapper) {
         this.postMapper      = pm;
         this.tagMapper       = tm;
@@ -41,6 +42,7 @@ public class PostServiceImpl implements PostService {
         this.postAsm = postAsm;
         this.merchantService = ms;
         this.merchantMapper = mmp;
+        this.circleMerchantMapper = cmm;
         this.postImageMapper = postImageMapper;
     }
 
@@ -64,6 +66,11 @@ public class PostServiceImpl implements PostService {
             merchant.setExternalId(req.getExternalId());
             merchant.setCreatedBy(userId);
             merchantMapper.insert(merchant);
+            //圈子和商家做关联
+            CircleMerchant circleMerchant = new CircleMerchant();
+            circleMerchant.setMerchantId(merchant.getId());
+            circleMerchant.setCircleId(req.getCircleId());
+            circleMerchantMapper.insert(circleMerchant);
         }
         Long merchantId = merchant.getId();
 

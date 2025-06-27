@@ -10,6 +10,7 @@ import com.example.feedbacker.dto.response.merchant.Suggestion;
 import com.example.feedbacker.entity.Merchant;
 import com.example.feedbacker.entity.MerchantFavorite;
 import com.example.feedbacker.exception.ApiException;
+import com.example.feedbacker.mapper.CircleMerchantMapper;
 import com.example.feedbacker.mapper.MerchantFavoriteMapper;
 import com.example.feedbacker.mapper.MerchantMapper;
 import com.example.feedbacker.service.MerchantService;
@@ -28,11 +29,14 @@ public class MerchantServiceImpl implements MerchantService {
     private final RestTemplate rest = new RestTemplate();
     private final MerchantMapper merchantMapper;
     private final MerchantFavoriteMapper favMapper;
+    private final CircleMerchantMapper cmMapper;
+
 
     public MerchantServiceImpl(MerchantMapper merchantMapper,
-                               MerchantFavoriteMapper favMapper) {
+                               MerchantFavoriteMapper favMapper, CircleMerchantMapper cmMapper) {
         this.merchantMapper = merchantMapper;
         this.favMapper = favMapper;
+        this.cmMapper = cmMapper;
     }
 
     @Override
@@ -131,19 +135,7 @@ public class MerchantServiceImpl implements MerchantService {
 
     @Override
     public List<MerchantSummary> myList(MyListRequest req){
-        Long userId = CurrentUserUtil.getUserId();
-        if(userId==null) throw new ApiException("请先登录");
-        return merchantMapper.findByCreator(userId).stream()
-                .map(m -> {
-                    MerchantSummary s = new MerchantSummary();
-                    s.id        = m.getId();
-                    s.name      = m.getName();
-                    s.address   = m.getAddress();
-                    s.latitude  = m.getLatitude();
-                    s.longitude = m.getLongitude();
-                    return s;
-                })
-                .collect(Collectors.toList());
+        return null;
     }
 
     @Override
@@ -161,5 +153,34 @@ public class MerchantServiceImpl implements MerchantService {
         d.createdBy  = m.getCreatedBy();
         return d;
     }
+
+    @Override
+    public List<MerchantSummary> listMerchantsByCircles(ListMerchantsByCircleRequest req) {
+        // 1) 查出去重后的商家ID
+        List<Long> mIds = cmMapper.selectMerchantIdsByCircles(req.getCircleIds());
+        if (mIds.isEmpty()) {
+            return Collections.emptyList();
+        }
+        // 2) 批量查询商家实体
+        List<Merchant> merchants = merchantMapper.selectByIds(mIds);
+        // 3) 转成 MerchantSummary DTO
+        return merchants.stream()
+                .map(m -> new MerchantSummary(
+                        m.getId(),
+                        m.getName(),
+                        m.getDescription(),
+                        m.getContactInfo(),
+                        m.getCreatedAt(),
+                        m.getUpdatedAt(),
+                        m.getExternalSource(),
+                        m.getExternalId(),
+                        m.getAddress(),
+                        m.getLatitude(),
+                        m.getLongitude(),
+                        m.getCreatedBy()
+                ))
+                .collect(Collectors.toList());
+    }
+
 
 }

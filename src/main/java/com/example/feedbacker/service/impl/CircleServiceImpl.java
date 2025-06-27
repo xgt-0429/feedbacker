@@ -5,6 +5,7 @@ import com.example.feedbacker.dto.request.post.ListPostsRequest;
 import com.example.feedbacker.dto.response.circle.CircleDetailResponse;
 import com.example.feedbacker.dto.request.circle.*;
 import com.example.feedbacker.dto.response.circle.ApplicationResponse;
+import com.example.feedbacker.dto.response.circle.CircleSummary;
 import com.example.feedbacker.dto.response.circle.InvitationResponse;
 import com.example.feedbacker.dto.response.post.PostSummary;
 import com.example.feedbacker.dto.response.post.PostSummaryAssembler;
@@ -196,6 +197,28 @@ public class CircleServiceImpl implements CircleService {
                 c.getCreatedAt(),
                 dtos
         );
+    }
+
+    @Override
+    public List<CircleSummary> listMyCircles() {
+        Long uid = CurrentUserUtil.getUserId();
+        // 1) 查出当前用户所属的圈子 ID 列表
+        List<Long> circleIds = memberMapper.findCircleIdsByUser(uid);
+        if (circleIds.isEmpty()) {
+            return List.of();
+        }
+        // 2) 根据 ID 逐一查 Circle 并映射成 Summary
+        return circleIds.stream()
+                .map(circleMapper::findById)
+                .filter(c -> c != null)
+                .map(c -> new CircleSummary(
+                        c.getId(),
+                        c.getName(),
+                        c.getDescription(),
+                        c.getOwnerId(),
+                        c.getCreatedAt()
+                ))
+                .collect(Collectors.toList());
     }
 
 }

@@ -6,30 +6,48 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 public class Merchant {
-    @NotNull(message = "不能为null")
+    /**
+     * 商家主键，自增
+     */
     private Long id;
 
-    @Size(max = 100,message = "最大长度要小于 100")
-    @NotBlank(message = "不能为空")
+    /**
+     * 商家名称
+     */
     private String name;
 
+    /**
+     * 商家描述
+     */
     private String description;
 
-    @Size(max = 255,message = "最大长度要小于 255")
+    /**
+     * 商家联系信息
+     */
     private String contactInfo;
 
     /**
-     * 外部数据来源（如 Google）
+     * 记录创建时间
+     */
+    private Date createdAt;
+
+    /**
+     * 记录更新时间
+     */
+    private Date updatedAt;
+
+    /**
+     * 外部数据来源（例如 google_maps）
      */
     private String externalSource;
 
     /**
-     * 外部接口中该商家的唯一 ID（place_id）
+     * 外部系统中该商家的唯一 ID（例如 Place ID）
      */
     private String externalId;
 
     /**
-     * 门店地址
+     * 商家在地图上的地址
      */
     private String address;
 
@@ -44,13 +62,9 @@ public class Merchant {
     private Double longitude;
 
     /**
-     * 首次创建该商家的用户 ID
+     * 此商家记录由哪个用户创建（users.id）
      */
     private Long createdBy;
-
-    private Date createdAt;
-
-    private Date updatedAt;
 
     public Long getId() {
         return id;

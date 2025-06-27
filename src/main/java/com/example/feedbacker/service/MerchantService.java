@@ -7,6 +7,7 @@ import com.example.feedbacker.dto.response.merchant.CreateMerchantResponse;
 import com.example.feedbacker.dto.response.merchant.MerchantDetailResponse;
 import com.example.feedbacker.dto.response.merchant.MerchantSummary;
 import com.example.feedbacker.dto.response.merchant.Suggestion;
+import jakarta.validation.Valid;
 
 import java.util.List;
 
@@ -27,6 +28,8 @@ public interface MerchantService {
     List<MerchantSummary> myList(MyListRequest req);
 
     MerchantDetailResponse detail(Long id);
+
+    List<MerchantSummary> listMerchantsByCircles(@Valid ListMerchantsByCircleRequest req);
 
 }
 

@@ -51,6 +51,13 @@ public class MerchantController {
         return ResponseEntity.ok(ApiResponse.success(page));
     }
 
+    @PostMapping("/list")
+    public ResponseEntity<ApiResponse<List<MerchantSummary>>> list(
+            @Valid @RequestBody ListMerchantsByCircleRequest req) {
+        List<MerchantSummary> list = svc.listMerchantsByCircles(req);
+        return ResponseEntity.ok(ApiResponse.success(list));
+    }
+
     @PostMapping("/suggest")
     public ResponseEntity<ApiResponse<List<Suggestion>>> suggest(
             @Valid @RequestBody SuggestRequest req) {

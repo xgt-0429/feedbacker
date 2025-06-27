@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.feedbacker.mapper.CircleMerchantMapper">
+
+    <!-- 插入 -->
+    <insert id="insert" parameterType="com.example.feedbacker.entity.CircleMerchant" useGeneratedKeys="true">
+        insert into circle_merchants (circle_id, merchant_id, created_at)
+        values (#{circleId,jdbcType=BIGINT}, #{merchantId,jdbcType=BIGINT},
+        #{createdAt,jdbcType=TIMESTAMP})
+    </insert>
+
+    <!-- 根据圈子列表去重查商家 ID -->
+    <select id="selectMerchantIdsByCircles" parameterType="map" resultType="long">
+        SELECT DISTINCT merchant_id
+        FROM circle_merchants
+        WHERE circle_id IN
+        <foreach collection="circleIds" item="cid" open="(" separator="," close=")">
+            #{cid}
+        </foreach>
+    </select>
+
+</mapper>

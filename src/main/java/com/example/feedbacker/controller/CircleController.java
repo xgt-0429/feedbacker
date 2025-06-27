@@ -4,6 +4,7 @@ package com.example.feedbacker.controller;
 import com.example.feedbacker.dto.request.circle.*;
 import com.example.feedbacker.dto.response.circle.ApplicationResponse;
 import com.example.feedbacker.dto.response.circle.CircleDetailResponse;
+import com.example.feedbacker.dto.response.circle.CircleSummary;
 import com.example.feedbacker.dto.response.circle.InvitationResponse;
 import com.example.feedbacker.service.CircleService;
 import com.example.feedbacker.dto.response.post.PostSummary;
@@ -104,4 +105,9 @@ public class CircleController {
         return ResponseEntity.ok(ApiResponse.success(null));
     }
 
+    @PostMapping("/mine")
+    public ResponseEntity<ApiResponse<List<CircleSummary>>> myCircles() {
+        List<CircleSummary> list = circleService.listMyCircles();
+        return ResponseEntity.ok(ApiResponse.success(list));
+    }
 }

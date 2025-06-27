@@ -2,6 +2,7 @@ package com.example.feedbacker.service;
 
 import com.example.feedbacker.dto.request.circle.*;
 import com.example.feedbacker.dto.response.circle.ApplicationResponse;
+import com.example.feedbacker.dto.response.circle.CircleSummary;
 import com.example.feedbacker.dto.response.circle.InvitationResponse;
 import com.example.feedbacker.dto.response.circle.CircleDetailResponse;
 
@@ -28,5 +29,7 @@ public interface CircleService {
     CircleDetailResponse getCircleDetail(Long circleId);
 
     void updateCircle(UpdateCircleRequest req);
+
+    List<CircleSummary> listMyCircles();
 
 }

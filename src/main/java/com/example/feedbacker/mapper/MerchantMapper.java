@@ -1,5 +1,8 @@
 package com.example.feedbacker.mapper;
 
+import com.example.feedbacker.dto.MerchantDto;
+import com.example.feedbacker.dto.request.merchant.CircleListRequest;
+import com.example.feedbacker.dto.response.PagedResult;
 import com.example.feedbacker.entity.Merchant;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -26,4 +29,5 @@ public interface MerchantMapper {
                    @Param("postId") Long postId);
 
     List<Merchant> selectByIds(@Param("ids") List<Long> ids);
+
 }
